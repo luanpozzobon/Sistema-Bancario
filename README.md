@@ -19,5 +19,19 @@ Para rodar o repositório é necessário clonar o mesmo, dar o seguinte comando 
 ## :soon: Implementação futura
 * Autenticação de usuários
 
+## :handshake: Colaboradores
+<table>
+    <tr>
+        <td align="center">
+            <a href="https://github.com/LuanPozzobon">
+                <img src="https://avatars.githubusercontent.com/u/108753073?v=4" width="100px;" alt="Foto de Luan Pozzobon no Github"/><br>
+                <sub>
+                    <b>LuanPozzobon</b>
+                </sub>
+            </a>
+        </td>
+    </tr>
+</table>
+
 ## :dart: Status do projeto
 Em andamento
