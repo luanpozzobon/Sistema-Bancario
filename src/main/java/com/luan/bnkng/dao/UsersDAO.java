@@ -7,13 +7,13 @@ import java.sql.*;
  * @author luanp
  */
 public class UsersDAO {
-    private Connection connection;
+    private Connection conn;
     
     public UsersDAO(){
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/bnkng", "root", "");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/bnkng", "root", "");
         }
         catch(ClassNotFoundException | SQLException e){
             e.printStackTrace();
@@ -22,8 +22,8 @@ public class UsersDAO {
     
     public boolean searchCpf(String cpf){
         try{
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT cpf FROM users WHERE cpf = " + cpf);
+            Statement st = conn.createStatement();
+            ResultSet resultSet = st.executeQuery("SELECT cpf FROM users WHERE cpf = " + cpf);
             
             if(resultSet.next()) return true;
         }
@@ -34,18 +34,32 @@ public class UsersDAO {
         return false;
     }
     
+    public boolean searchAccount(String accountNumber){
+        try{
+            Statement st = conn.createStatement();
+            ResultSet resultSet = st.executeQuery("SELECT accountNumber FROM users WHERE accountNumber = " + accountNumber);
+            
+            if(resultSet.next()) return true;
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+                
+        return false;
+    }
+    
     public boolean createUser(User user){
         String sql = "INSERT INTO users VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?)";
-        try(PreparedStatement statement = connection.prepareStatement(sql)){
-            statement.setString(1, user.getName());
-            statement.setString(2, user.getBirthDate().toString());
-            statement.setString(3, user.getCpf());
-            statement.setString(4, user.getEmail());
-            statement.setString(5, user.getPhone());
-            statement.setString(6, user.getPassword());
-            statement.setString(7, "1");
+        try(PreparedStatement st = conn.prepareStatement(sql)){
+            st.setString(1, user.getName());
+            st.setString(2, user.getBirthDate().toString());
+            st.setString(3, user.getCpf());
+            st.setString(4, user.getEmail());
+            st.setString(5, user.getPhone());
+            st.setString(6, user.getPassword());
+            st.setString(7, user.getAccountNumber());
             
-            statement.executeUpdate();
+            st.executeUpdate();
             
             return true;
         }
@@ -55,13 +69,13 @@ public class UsersDAO {
         }
     }
     
-    public Connection getConnection(){
-        return connection;
+    public Connection getConn(){
+        return conn;
     }
     
     public void closeConeection(){
         try{
-            connection.close();
+            conn.close();
         }
         catch(SQLException e){
             e.printStackTrace();

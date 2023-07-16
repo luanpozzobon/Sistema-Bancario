@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import com.luan.bnkng.dao.UsersDAO;
+import java.util.Random;
 
 /**
  *
@@ -93,6 +94,7 @@ public class User {
             return false;
         }
         
+        generateAccount();
         return true;
     }
     
@@ -128,6 +130,14 @@ public class User {
         return (sum == 10) ? 0 : sum;
     }
     
+    public void generateAccount(){
+        Random rd = new Random();
+        do{
+            accountNumber = birthDate.toString().substring(2, 4);
+            accountNumber += cpf.substring(9, 11);
+            accountNumber += String.valueOf(rd.nextInt(1000000));
+        }while(accountNumber.equals(banco.searchAccount(accountNumber)));
+    }
     public void saveUser(){
         if(banco.createUser(this)){
             System.out.println("Usuário cadastrado com sucesso!");
