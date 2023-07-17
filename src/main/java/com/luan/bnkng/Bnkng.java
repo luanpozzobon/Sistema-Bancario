@@ -10,7 +10,7 @@ public class Bnkng{
     private static String cpf;
     private static String password;
 
-    private static User user;
+    private static User user = new User();
     
     public static void main(String[] args) {
         while(true){
@@ -26,12 +26,25 @@ public class Bnkng{
                     System.exit(0);
                 case 1:
                     openAccount();
+                    break;
+                case 2:
+                    login();
+                    break;
             }
         }
     }
     
     private static void login(){
-        
+        System.out.println("Autentifique-se para poder acessar os serviços!");
+        System.out.print("CPF: ");
+        cpf = User.formatCpf(sc.getNextLine());
+        System.out.print("Password: ");
+        password = sc.getNextLine();
+        if(user.searchUser(cpf, password)){
+            System.out.println("Bem-Vindo!");
+        } else{
+            System.out.println("Credenciais Inválidas!");
+        }
     }
     
     private static void openAccount(){

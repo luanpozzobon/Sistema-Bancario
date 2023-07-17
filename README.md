@@ -5,6 +5,7 @@ Sistema Bancário
 
 ## :books: Funcionalidades
 * <b>Cadastro</b>: Cadastro de novos usuários, validando idade mínima de 18 anos, e verificando se o CPF não foi cadastrado anteriormente, posteriuormente salvando tudo no banco de dados.
+* <b>Login</b>: Autenticação de um usuário, utilizando CPF, e verificando se o CPF consta no banco de dados, e se a senha corresponde.
 
 ## :wrench: Tecnologias utilizadas
 * Java 19
@@ -17,7 +18,7 @@ Para rodar o repositório é necessário clonar o mesmo, dar o seguinte comando 
 ```
 
 ## :soon: Implementação futura
-* Autenticação de usuários
+* Implementação das funções bancárias
 
 ## :handshake: Colaboradores
 <table>

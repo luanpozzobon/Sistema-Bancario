@@ -48,6 +48,23 @@ public class UsersDAO {
         return false;
     }
     
+    public boolean searchUser(String cpf, String password){
+        try{
+            PreparedStatement st = conn.prepareStatement("SELECT cpf, password FROM users WHERE cpf = ? AND password = ?");
+            st.setString(1, cpf);
+            st.setString(2, password);
+            
+            ResultSet resultSet = st.executeQuery();
+            
+            if(resultSet.next()) return true;
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        
+        return false;
+    }
+    
     public boolean createUser(User user){
         String sql = "INSERT INTO users VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?)";
         try(PreparedStatement st = conn.prepareStatement(sql)){

@@ -12,7 +12,7 @@ import java.util.Random;
  */
 public class User {
     private int userId;
-    private final String name;
+    private String name;
     private LocalDate birthDate;
     private String cpf;
     private String email;
@@ -20,6 +20,8 @@ public class User {
     private String phone;
     private String accountNumber;
     private UsersDAO banco = new UsersDAO();
+    
+    public User(){}
     
     public User(String name, String birthDate, String cpf) {
         this.name = name;
@@ -98,8 +100,12 @@ public class User {
         return true;
     }
     
+    public static String formatCpf(String cpf){
+        return cpf.replaceAll("[^0-9]", "");
+    }
+    
     private boolean validateCpf(){
-        cpf = cpf.replaceAll("[^0-9]", "");
+        cpf = formatCpf(this.cpf);
         
         if(cpf.length() < 11) return false;
         
@@ -138,11 +144,17 @@ public class User {
             accountNumber += String.valueOf(rd.nextInt(1000000));
         }while(accountNumber.equals(banco.searchAccount(accountNumber)));
     }
+    
     public void saveUser(){
         if(banco.createUser(this)){
             System.out.println("Usuário cadastrado com sucesso!");
+            System.out.print("Conta: " + accountNumber);
         } else {
             System.out.println("Erro ao cadastrar usuário! Verifique os dados e tente novamente!");
         }
+    }
+    
+    public boolean searchUser(String cpf, String password){
+        return banco.searchUser(cpf, password);
     }
 }
