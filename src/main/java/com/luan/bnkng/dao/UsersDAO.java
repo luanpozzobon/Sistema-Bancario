@@ -1,28 +1,20 @@
 package com.luan.bnkng.dao;
 
-import com.luan.bnkng.users.User;
+import com.luan.bnkng.models.User;
 import java.sql.*;
 /**
  *
  * @author luanp
  */
-public class UsersDAO {
-    private Connection conn;
+public class UsersDAO extends DatabaseDAO{
     
     public UsersDAO(){
-        try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/bnkng", "root", "");
-        }
-        catch(ClassNotFoundException | SQLException e){
-            e.printStackTrace();
-        }
+        super();
     }
     
     public boolean searchCpf(String cpf){
         try{
-            Statement st = conn.createStatement();
+            Statement st = getConnection().createStatement();
             ResultSet resultSet = st.executeQuery("SELECT cpf FROM users WHERE cpf = " + cpf);
             
             if(resultSet.next()) return true;
@@ -34,42 +26,27 @@ public class UsersDAO {
         return false;
     }
     
-    public boolean searchAccount(String accountNumber){
+    public ResultSet searchUser(String cpf, String password){
         try{
-            Statement st = conn.createStatement();
-            ResultSet resultSet = st.executeQuery("SELECT accountNumber FROM users WHERE accountNumber = " + accountNumber);
-            
-            if(resultSet.next()) return true;
-        }
-        catch(SQLException e){
-            e.printStackTrace();
-        }
-                
-        return false;
-    }
-    
-    public boolean searchUser(String cpf, String password){
-        try{
-            PreparedStatement st = conn.prepareStatement("SELECT cpf, password FROM users WHERE cpf = ? AND password = ?");
+            PreparedStatement st = getConnection().prepareStatement("SELECT * FROM users WHERE cpf = ? AND password = ?");
             st.setString(1, cpf);
             st.setString(2, password);
             
-            ResultSet resultSet = st.executeQuery();
-            
-            if(resultSet.next()) return true;
+            ResultSet rSet = st.executeQuery();
+            if(rSet.next()) return rSet;
         }
         catch(SQLException e){
             e.printStackTrace();
         }
         
-        return false;
+        return null;
     }
     
     public boolean createUser(User user){
         String sql = "INSERT INTO users VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?)";
-        try(PreparedStatement st = conn.prepareStatement(sql)){
+        try(PreparedStatement st = getConnection().prepareStatement(sql)){
             st.setString(1, user.getName());
-            st.setString(2, user.getBirthDate().toString());
+            st.setString(2, user.getBirthDate());
             st.setString(3, user.getCpf());
             st.setString(4, user.getEmail());
             st.setString(5, user.getPhone());
@@ -83,19 +60,6 @@ public class UsersDAO {
         catch(SQLException e){
             e.printStackTrace();
             return false;
-        }
-    }
-    
-    public Connection getConn(){
-        return conn;
-    }
-    
-    public void closeConeection(){
-        try{
-            conn.close();
-        }
-        catch(SQLException e){
-            e.printStackTrace();
         }
     }
 }

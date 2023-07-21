@@ -1,7 +1,9 @@
 package com.luan.bnkng;
 
-import com.luan.bnkng.users.User;
+import com.luan.bnkng.models.*;
+import com.luan.bnkng.utils.Formatter;
 import com.luan.bnkng.utils.InputReader;
+import java.sql.ResultSet;
 
 public class Bnkng{
     private static final InputReader sc = new InputReader();
@@ -11,6 +13,7 @@ public class Bnkng{
     private static String password;
 
     private static User user = new User();
+    private static Account acc = new Account();
     
     public static void main(String[] args) {
         while(true){
@@ -37,11 +40,14 @@ public class Bnkng{
     private static void login(){
         System.out.println("Autentifique-se para poder acessar os serviços!");
         System.out.print("CPF: ");
-        cpf = User.formatCpf(sc.getNextLine());
+        cpf = Formatter.formatCpf(sc.getNextLine());
         System.out.print("Password: ");
         password = sc.getNextLine();
-        if(user.searchUser(cpf, password)){
+        ResultSet rSet;
+        if((rSet = user.searchUser(cpf, password)) != null){
             System.out.println("Bem-Vindo!");
+            user = new User(rSet);
+            acc = new Account(user);
         } else{
             System.out.println("Credenciais Inválidas!");
         }
@@ -54,13 +60,14 @@ public class Bnkng{
         System.out.print("Data de nascimento (aaaa-mm-dd): ");
         birthDate = sc.getNextLine();
         System.out.print("CPF: ");
-        cpf = sc.getNextLine();
+        cpf = Formatter.formatCpf(sc.getNextLine());
         
         user = new User(name, birthDate, cpf);
         if(!user.validateUser()){
-            System.out.println("Infelizmente, vocÊ não está apto a abrir uma conta!");
+            System.out.println("Infelizmente, você não está apto a abrir uma conta!");
             return;
         }
+        acc = new Account(user);
         
         System.out.println("Quase lá! Precisamos apenas mais algumas informações!");
         System.out.print("E-Mail: ");
@@ -79,6 +86,7 @@ public class Bnkng{
         }
         user.setPassword(password);
         
-        user.saveUser();        
+        user.saveUser();
+        acc.saveAccount();
     }
 }
