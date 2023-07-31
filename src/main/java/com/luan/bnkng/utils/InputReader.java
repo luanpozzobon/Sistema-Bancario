@@ -7,7 +7,7 @@ import java.util.Scanner;
  * @author luanp
  */
 public class InputReader {
-    private Scanner sc;
+    private final Scanner sc;
     
     public InputReader(){
         sc = new Scanner(System.in);
@@ -19,5 +19,9 @@ public class InputReader {
     
     public String getNextLine(){
         return sc.nextLine();
+    }
+    
+    public double getNextDouble(){
+        return Double.parseDouble(sc.nextLine());
     }
 }

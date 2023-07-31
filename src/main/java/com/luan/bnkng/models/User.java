@@ -14,7 +14,6 @@ import java.sql.SQLException;
  * @since 0.1
  */
 public class User {
-    private int userId;
     private String name;
     private String birthDate;
     private String cpf;
@@ -41,23 +40,21 @@ public class User {
         database = new UsersDAO();
     }
 
-    public User(ResultSet resultSet){
+    public User(ResultSet rSet){
+        database = new UsersDAO();
         try{
-            userId = resultSet.getInt("userId");
-            name = resultSet.getString("name");
-            birthDate = resultSet.getString("birthDate");
-            cpf = resultSet.getString("cpf");
-            email = resultSet.getString("email");
-            phone = resultSet.getString("phone");
-            password = resultSet.getString("password");
-            accountNumber = resultSet.getString("accountNumber");
+            name = rSet.getString("name");
+            birthDate = rSet.getString("birthDate");
+            cpf = rSet.getString("cpf");
+            email = rSet.getString("email");
+            phone = rSet.getString("phone");
+            password = rSet.getString("password");
+            accountNumber = rSet.getString("accountNumber");
+            rSet.close();
         }
         catch(SQLException e){
             e.printStackTrace();
         }
-    }
-    public int getUserId() {
-        return userId;
     }
 
     public String getName() {
@@ -77,7 +74,9 @@ public class User {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        if(!email.equals("")){
+            this.email = email;
+        }
     }
 
     public String getPassword() {
@@ -85,7 +84,9 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        if(!password.equals("")){
+            this.password = password;
+        }
     }
     
     public String getPhone() {
@@ -93,7 +94,9 @@ public class User {
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
+        if(!phone.equals("")){
+            this.phone = phone;
+        }
     }
     
     public String getAccountNumber() {
@@ -177,18 +180,20 @@ public class User {
     public void saveUser(){
         if(database.createUser(this)){
             System.out.println("Usuário cadastrado com sucesso!");
-            System.out.print("Conta: " + accountNumber);
+            System.out.println("Conta: " + accountNumber);
         } else {
             System.out.println("Erro ao cadastrar usuário! Verifique os dados e tente novamente!");
         }
     }
     
-    /**
-     * Check if the authentication information is correct
-     * @param cpf user's cpf
-     * @param password user's password
-     * @return whether these informations are correct or not
-     */
+    public void modifyUser(){
+        if(database.modifyUser(this)){
+            System.out.println("Dados alterados com sucesso!");
+        } else{
+            System.out.println("Erro ao alterar dados do usuário!");
+        }
+    }
+    
     public ResultSet searchUser(String cpf, String password){
         return database.searchUser(cpf, password);
     }

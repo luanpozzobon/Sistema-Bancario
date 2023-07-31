@@ -10,7 +10,6 @@ import java.util.Random;
  * @author luanp
  */
 public class Account {
-    private int accountId;
     private String accountNumber;
     private double balance;
     private final AccountsDAO database;
@@ -19,12 +18,23 @@ public class Account {
         database = new AccountsDAO();
     }
     
+    public Account(String accountNumber){
+        database = new AccountsDAO();
+        ResultSet rSet = database.searchAccount(accountNumber);
+        try{
+            this.accountNumber = rSet.getString("accountNumber");
+            this.balance = rSet.getDouble("balance");
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+    
     public Account(User user){
         database = new AccountsDAO();
         if(user.getAccountNumber() != null){
             ResultSet rSet = database.searchAccount(user.getAccountNumber());
             try{
-                accountId = rSet.getInt("accountId");
                 accountNumber = rSet.getString("accountNumber");
                 balance = rSet.getDouble("balance");
             }
@@ -37,13 +47,17 @@ public class Account {
         }
         
     }
-
+    
     public String getAccountNumber() {
         return accountNumber;
     }
 
     public double getBalance() {
         return balance;
+    }
+    
+    public void setBalance(double balance){
+        this.balance = balance;
     }
     
     public void generateAccountNumber(User user){
@@ -58,5 +72,33 @@ public class Account {
     
     public void saveAccount(){
         database.saveAccount(this);
+    }
+    
+    public boolean transfer(Account destAccount, double value){
+        if(this.getBalance() >= value){
+            if(database.transfer(this, destAccount, value)){
+                this.setBalance(this.getBalance() - value);
+                destAccount.setBalance(destAccount.getBalance() + value);
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public boolean deposit(double value){
+        if(database.changeBalance(this, value)){
+            setBalance(getBalance() + value);
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean withdraw(double value){
+        if(database.changeBalance(this, -value)){
+            setBalance(getBalance() - value);
+            return true;
+        }
+        return false;
     }
 }

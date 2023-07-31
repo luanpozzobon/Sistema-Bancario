@@ -14,8 +14,11 @@ public abstract class DatabaseDAO {
     protected DatabaseDAO(){
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
+            String dbURL = System.getenv("DB_URL");
+            String dbUser = System.getenv("DB_USER");
+            String dbPassword = System.getenv("DB_PASSWORD");
             
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/bnkng", "root", "");
+            conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
         }
         catch(ClassNotFoundException | SQLException e){
             e.printStackTrace();
