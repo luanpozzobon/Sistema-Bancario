@@ -1,0 +1,8 @@
+com\luan\bnkng\dao\UsersDAO.class
+com\luan\bnkng\models\User.class
+com\luan\bnkng\utils\Formatter.class
+com\luan\bnkng\Bnkng.class
+com\luan\bnkng\dao\DatabaseDAO.class
+com\luan\bnkng\models\Account.class
+com\luan\bnkng\utils\InputReader.class
+com\luan\bnkng\dao\AccountsDAO.class
